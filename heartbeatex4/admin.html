@@ -1,0 +1,48 @@
+
+<html>
+<title>Monitoring Page</title>
+<script src="/socket.io/socket.io.js"></script>
+<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+<style>
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 50%;
+}
+td,th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+</style>
+<table id='socketinfo'>
+  <tr>
+    <th>Socket ID</th>
+    <th>Status</th>
+  </tr>
+</table>
+
+  <script>
+
+
+
+$(function () {
+
+  var socket = io();
+  socket.on('to admin online', function(msg1,msg2){
+    //  $('#socketinfo').append($('<tr>').append($('<td>').text(msg1)).append($('<td>').text(msg2)));
+  var row='<tr id='+msg1+'><td>'+msg1+'</td><td>'+msg2+'</td></tr>';
+  $('#socketinfo').append(row);
+  });
+
+  socket.on('to admin offline', function(msg1,msg2){
+  //  var row='<tr id='+msg1+'><td>'+msg1+'</td><td>'+msg2+'</td></tr>';
+  //    $('#socketinfo').append($('<tr>').append($('<td>').text(msg1)).append($('<td>').text(msg2)));
+//$('#socketinfo').append(row);
+$('#'+msg1).remove();
+  });
+
+});
+</script>
+
+</html>

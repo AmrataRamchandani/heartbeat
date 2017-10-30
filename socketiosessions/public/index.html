@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Chat App</title>
+	<style type="text/css">
+		.wrapper {
+			display: block;
+			margin: 0 auto;
+			max-width: 600px;
+			text-align: center;
+			width: 90%;
+		}
+
+		.chat-box {
+			border: 1px solid #000; 
+			height: 350px;
+			width: 100%;
+			overflow-y: scroll;
+		}
+
+		form {
+			margin: 10px 0;
+		}
+	</style>
+</head>
+<body>
+<div class="wrapper">
+	<h1>Chat with socket.io</h1>
+	<section class="chat-box" id="chatBox"></section>
+
+	<form id="chatForm">
+		<input type="text" id="msgBox" placeholder="Enter your message" />
+		<button id="chatBtn">Send</button>
+	</form>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/app.js"></script>
+</body>
+</html>
