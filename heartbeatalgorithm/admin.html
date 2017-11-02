@@ -1,0 +1,50 @@
+
+<html>
+<title>Monitoring Page</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+<style>
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 50%;
+}
+td,th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+</style>
+<h1>List of connected Socket ID's </h1>
+<table id='socketinfo'>
+  <tr>
+    <th>Socket ID</th>
+    <th>Username</th>
+    <th>Room ID</th>
+  </tr>
+</table>
+
+
+<script>
+
+ $.get("/connectedsocketids", function(socket) {
+                for(i in socket){
+                  var socketid=socket[i].id;
+                  var socketusername=socket[i].username;
+                  var socketroomid=socket[i].roomid;
+                  var row='<tr><td>'+socketid+'</td><td>'+socketusername+'</td><td>'+socketroomid+'</td></tr>';
+                     $('#socketinfo').append(row);
+                }
+
+              });
+              // setInterval(function() {
+                var table = $('#socketinfo');
+  // refresh every 5 seconds
+setInterval(function(){
+    table.load("./views/admin.html #socketinfo");
+  }, 5000);
+            // }, 10000);
+
+</script>
+
+
+</html>

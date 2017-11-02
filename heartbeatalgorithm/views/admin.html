@@ -1,0 +1,56 @@
+
+<html>
+<title>Monitoring Page</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+<style>
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 50%;
+}
+td,th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+</style>
+<h1>List of connected Socket ID's </h1>
+<table id='socketinfo'>
+  <tr>
+    <th>Socket ID</th>
+    <th>Username</th>
+    <th>Room ID</th>
+  </tr>
+</table>
+
+
+<script>
+
+             setInterval(function() {
+ $.get("/connectedsocketids", function(socket) {
+                for(i in socket){
+                  var socketid=socket[i].id;
+                  var socketusername=socket[i].username;
+                  var socketroomid=socket[i].roomid;
+                if($('#'+socketid).length > 0)
+                {
+                  continue;
+                }
+                else {
+var  row='<tr id ='+socketid+'><td>'+socketid+'</td><td>'+socketusername+'</td><td>'+socketroomid+'</td></tr>';
+                    $('#socketinfo').append(row);
+                }
+                }
+              });
+
+              $.get("/deletedsocketids", function(socket) {
+                for(j in socket){
+                  $('#'+socket[j]).remove();
+                }
+              });
+
+   }, 3000);
+</script>
+
+
+</html>
