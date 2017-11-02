@@ -1,6 +1,8 @@
 
 <html>
 <title>Monitoring Page</title>
+
+<!-- Jquery -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
 <style>
 table {
@@ -16,22 +18,54 @@ td,th {
 </style>
 <h1>List of connected Socket ID's </h1>
 <table id='socketinfo'>
+  <thead>
   <tr>
+    <th>Username</th>
+    <th>Quiz ID</th>
     <th>Socket ID</th>
-
   </tr>
+</thead>
+<tbody>
+</tbody>
 </table>
 
 
 <script>
-$.get("/connectedsocketids", function(socketids) {
-socketids.forEach(function(entry) {
-  var row='<tr id='+entry+'><td>'+entry+'</td></tr>';
-  $('#socketinfo').append(row);
+// $.get("/connectedsocketids", function(socketids) {
+// socketids.forEach(function(entry) {
+//   var row='<tr id='+entry+'><td>'+entry+'</td></tr>';
+//   $('#socketinfo').append(row);
+//
+// });
+//
+// });
 
-});
 
-});
+             setInterval(function() {
+ $.get("/connectedsocketids", function(socket) {
+                for(i in socket){
+                  var quizid=socket[i].quizid;
+                  var username=socket[i].username;
+                  var socketid=socket[i].socketid;
+                if($('#'+socketid).length > 0)
+                {
+                  continue;
+                }
+                else {
+var  row='<tr id ='+socketid+'><td>'+username+'</td><td>'+quizid+'</td><td>'+socketid+'</td></tr>';
+                    $('#socketinfo tbody').append(row);
+                }
+                }
+              });
+
+              $.get("/deletedsocketids", function(socket) {
+                for(j in socket){
+                  $('#'+socket[j]).remove();
+                }
+              });
+
+   }, 3000);
+
 
 </script>
 
