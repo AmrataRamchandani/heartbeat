@@ -32,10 +32,16 @@ io.set("authorization", function(data, accept) {
 });
 
 io.on('connection', function(socket) {
+	console.log(socket.id+' Socket id Connected');
 	socket.on('send chat', function(data) {
 		data.msg = socket.request.name + ": " + data.msg;
 		io.emit('new chat', data);
 	});
+
+	socket.on('disconnect', function(){
+    console.log(socket.id+' Socket id disconnected');
+	});
+
 });
 
 server.listen(PORT, IP);

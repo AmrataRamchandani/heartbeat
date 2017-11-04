@@ -18,17 +18,18 @@ td,th {
 </style>
 <h1>List of connected Socket ID's </h1>
 <table id='socketinfo'>
-  <thead>
+
   <tr>
     <th>Username</th>
     <th>Quiz ID</th>
+    <th>Room ID</th>
     <th>Socket ID</th>
+    <th>IP</th>
   </tr>
-</thead>
-<tbody>
-</tbody>
+
 </table>
 
+</html>
 
 <script>
 // $.get("/connectedsocketids", function(socketids) {
@@ -44,16 +45,18 @@ td,th {
              setInterval(function() {
  $.get("/connectedsocketids", function(socket) {
                 for(i in socket){
-                  var quizid=socket[i].quizid;
                   var username=socket[i].username;
+                  var quizid=socket[i].quizid;
+                  var roomid=socket[i].roomid;
                   var socketid=socket[i].socketid;
+                  var ip=socket[i].ip;
                 if($('#'+socketid).length > 0)
                 {
                   continue;
                 }
                 else {
-var  row='<tr id ='+socketid+'><td>'+username+'</td><td>'+quizid+'</td><td>'+socketid+'</td></tr>';
-                    $('#socketinfo tbody').append(row);
+var  row='<tr id ='+socketid+'><td>'+username+'</td><td>'+quizid+'</td><td>'+roomid+'</td><td>'+socketid+'</td><td>'+ip+'</td></tr>';
+                    $('#socketinfo').append(row);
                 }
                 }
               });
@@ -68,6 +71,3 @@ var  row='<tr id ='+socketid+'><td>'+username+'</td><td>'+quizid+'</td><td>'+soc
 
 
 </script>
-
-
-</html>

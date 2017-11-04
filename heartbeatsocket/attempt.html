@@ -9,14 +9,17 @@
 $( document ).ready(function() {
   var socket = io();
 
-  var lastPart = window.location.href.split("/").pop();
-  var quizid=lastPart.match(/\d+$/)[0];
-  document.getElementById('quizid').innerHTML=quizid;
+  var lastPartOfURL = window.location.href.split("/").pop();
+  var usernamefromURL=lastPartOfURL.match(/[a-zA-Z]+/);
+  var quizidfromURL=lastPartOfURL.match(/[0-9]+/);
+
+  document.getElementById('quizid').innerHTML=quizidfromURL;
 
   $.get("/username", function(username) {
-    socket.emit('attempt', {username: username, quizid: quizid});
     document.getElementById('username').innerHTML=username;
   });
+
+  socket.emit('attempt', {username:usernamefromURL,quizid: quizidfromURL,roomid:lastPartOfURL});
 });
 
 </script>
