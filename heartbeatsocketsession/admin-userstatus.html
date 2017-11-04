@@ -1,0 +1,67 @@
+
+<html>
+<title>Monitoring Page</title>
+
+<!-- Jquery -->
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+<style>
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 50%;
+}
+td,th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+</style>
+<center><h1>Live status of users</h1>
+<div id="livestatusdiv">
+</div>
+</html>
+
+<script>
+
+     function humanise(difference){
+       var days = Math.floor(difference / (1000 * 60 * 60 * 24));
+       var hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+       var minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+       var seconds = Math.floor((difference % (1000 * 60)) / 1000);
+       var time = days+' days, '+hours+' hrs, '+minutes+' mins, '+seconds+' secs' ;
+       return time;
+     }
+
+
+      var table = $('<table></table>').attr('id', 'livestatustable');
+      var header= '<tr><th>Username</th><th>RoomID</th><th>Status</th><th>Amount of Online Time</th></tr>'
+      table.append(header);
+     $.get("/livestatus", function(livestatusinfo) {
+       for(i in livestatusinfo){
+         var username=livestatusinfo[i].username;
+         var roomid=livestatusinfo[i].roomid;
+         var maxConnTimestamp=livestatusinfo[i].max_connected_timestamp;
+         var maxDisconnTimestamp=livestatusinfo[i].max_disconnected_timestamp;
+         if(maxConnTimestamp<maxDisconnTimestamp){
+           var socketstatus="Disconnected";
+           var timestampToConsider=maxDisconnTimestamp;
+        }else{
+           var socketstatus="Connected";
+           var timestampToConsider=maxConnTimestamp;
+        }
+
+         var currentTimestamp=new Date().getTime();
+         var diff = currentTimestamp - timestampToConsider;
+         var onlineTime = humanise(diff);
+         var  row='<tr><td>'+username+'</td><td>'+roomid+'</td><td>'+socketstatus+'</td><td>'+onlineTime+'</td></tr>';
+           table.append(row);
+       }
+     });
+      $('#livestatusdiv').append(table);
+
+
+
+
+
+</script>

@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Attempt</title>
+<script src="/socket.io/socket.io.js"></script>
+<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+<script>
+
+$( document ).ready(function() {
+  var socket = io();
+
+  var lastPart = window.location.href.split("/").pop();
+  var quizid=lastPart.match(/\d+$/)[0];
+  document.getElementById('quizid').innerHTML=quizid;
+
+  $.get("/username", function(username) {
+    socket.emit('attempt', {username: username, quizid: quizid,roomid:lastPart});
+    document.getElementById('username').innerHTML=username;
+  });
+});
+
+</script>
+
+  </head>
+  <body>
+    <h1>Welcome <span id=username></span></h1>
+    <h3>You have choosed to attempt Quiz <span id=quizid></span></h3>
+    <a href="/finish">Finish Attempt</a>
+  </body>
+</html>
