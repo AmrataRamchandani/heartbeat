@@ -8,10 +8,12 @@
 
 $( document ).ready(function() {
   var socket = io();
+
   var lastPartOfURL = window.location.href.split("/").pop();
   var usernamefromURL=lastPartOfURL.match(/[a-zA-Z]+/);
   var quizidfromURL=lastPartOfURL.match(/[0-9]+/);
-
+  // socket.username="'"+usernamefromURL+"'";
+  // alert(socket.username);
   document.getElementById('quizid').innerHTML=quizidfromURL;
 
   $.get("/username", function(username) {

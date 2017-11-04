@@ -1,6 +1,6 @@
 
 <html>
-<title>Monitoring Page</title>
+<title>User Status</title>
 
 <!-- Jquery -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
@@ -17,8 +17,17 @@ td,th {
 }
 </style>
 <center><h1>Live status of users</h1>
-<div id="livestatusdiv">
-</div>
+  <table id='livestatus'>
+
+    <tr>
+      <th>Username</th>
+      <th>Quiz ID</th>
+      <th>Room ID</th>
+      <th>Status</th>
+      <th>Amount of Online/Offline Time</th>
+    </tr>
+
+  </table>
 </html>
 
 <script>
@@ -32,13 +41,11 @@ td,th {
        return time;
      }
 
-      var table = $('<table></table>').attr('id', 'livestatustable');
-      var header= '<tr><th>Username</th><th>RoomID</th><th>Status</th><th>Amount of Online Time</th></tr>'
-      table.append(header);
+     setInterval(function() {
      $.get("/livestatus", function(livestatusinfo) {
        for(i in livestatusinfo){
          var username=livestatusinfo[i].username;
-         var quizid=livestatusinfo[i].roomid;
+         var quizid=livestatusinfo[i].quizid;
          var roomid=livestatusinfo[i].roomid;
          var countConnSockID=livestatusinfo[i].count_connected_socketid;
          var countDisconnSockID=livestatusinfo[i].count_disconnected_socketid;
@@ -62,10 +69,19 @@ td,th {
          var currentTimestamp=new Date().getTime();
          var diff = currentTimestamp - timestampToConsider;
          var onlineTime = humanise(diff);
-         var  row='<tr><td>'+username+'</td><td>'+roomid+'</td><td>'+socketstatus+'</td><td>'+onlineTime+'</td></tr>';
-           table.append(row);
+
+         if($('#'+roomid).length > 0)
+         {
+            $('#'+roomid).find('td:eq(3)').html(socketstatus);
+            $('#'+roomid).find('td:eq(4)').html(onlineTime);
+           //then update that row-> delete previous one or try to update it
+         }else{
+           // new row addition
+           var  row='<tr id='+roomid+'><td>'+username+'</td><td>'+quizid+'</td><td>'+roomid+'</td><td>'+socketstatus+'</td><td>'+onlineTime+'</td></tr>';
+             $("#livestatus").append(row);
+         }
        }
      });
-      $('#livestatusdiv').append(table);
+ }, 3000);
 
 </script>

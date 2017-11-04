@@ -1,0 +1,40 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Quiz Login</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+    <script>
+      $(document).ready(function(){
+        $("#welcomemsg").hide();
+        $("#attempt").click(function(){
+        var socket = io();
+        var username= $('#formusername').val().split(' ').join('');;
+        var quizid= $('#formquizid').val().split(' ').join('');;
+        var roomid= username+quizid;
+        document.title = roomid;
+        document.getElementById('quizid').innerHTML=quizid;
+        document.getElementById('username').innerHTML=username;
+          $("#quizform").hide();
+          $("#welcomemsg").show();
+
+      socket.emit('attempt', {username:username,quizid: quizid,roomid:roomid});
+      });
+    });
+    </script>
+  </head>
+  <body>
+    <div id='quizform'>
+        <input type="text" size="40" placeholder="Username" id="formusername" name="username"><br />
+        <br>
+        <input type="text" size="40" placeholder="Quiz ID(Integers only)" id="formquizid" name="quizid"><br />
+        <br>
+        <input type="button" value="Attempt Quiz" id="attempt">
+   </div>
+     <div id='welcomemsg'>
+       <h1>Welcome <span id=username></span></h1>
+       <h3>You have choosed to attempt Quiz <span id=quizid></span></h3>
+       <a href="/">Finish Attempt</a>
+     </div>
+  </body>
+</html>

@@ -53,7 +53,7 @@ app.get('/',function(req,res){
 });
 
 app.post('/login', function (req, res) {
-	req.session.username = (req.body.username).split(' ').join('');;
+	req.session.username = (req.body.username).split(' ').join('');
   res.redirect('/home');
   res.end();
 });
@@ -106,7 +106,9 @@ app.get('/logout',function(req,res){
 var connectedSockets =[];
 io.on('connection', function(socket){
   console.log(socket.id+' Socket id connected');
-
+//Why this is not getting set here ? but getting set on client side and inside socket.on()
+    //  socket.username="Amrata";
+    //  console.log(socket.username);
     socket.on('attempt', function(data){
     socket.username="'"+data.username+"'";
     socket.quizid=data.quizid;
@@ -115,7 +117,7 @@ io.on('connection', function(socket){
     socket.statusConnected="'Connected'";
     socket.timestampC=socket.handshake.issued;
     socket.ip="'"+socket.request.connection.remoteAddress+"'";
-    var socketobject = {username:data.username,quizid:data.quizid,roomid:data.roomid,socketid:socket.id,
+    var socketobject = {username:socket.username,quizid:socket.quizid,roomid:socket.roomid,socketid:socket.id,
                         ip:socket.ip};
 
     connectedSockets.push(socketobject);
@@ -127,6 +129,7 @@ io.on('connection', function(socket){
       if (err) throw err;
       console.log('Record for Connected Socket ID : '+socket.socketid+' is inserted into DB');
     });
+
 });
 
   socket.on('disconnect', function(){

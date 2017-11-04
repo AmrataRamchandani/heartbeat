@@ -1,6 +1,6 @@
 
 <html>
-<title>Monitoring Page</title>
+<title>Socket Info</title>
 
 <!-- Jquery -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
@@ -32,15 +32,6 @@ td,th {
 </html>
 
 <script>
-// $.get("/connectedsocketids", function(socketids) {
-// socketids.forEach(function(entry) {
-//   var row='<tr id='+entry+'><td>'+entry+'</td></tr>';
-//   $('#socketinfo').append(row);
-//
-// });
-//
-// });
-
 
              setInterval(function() {
  $.get("/connectedsocketids", function(socket) {
