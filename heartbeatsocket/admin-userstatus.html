@@ -20,14 +20,14 @@ td,th {
   <table id='livestatus'>
 
     <tr>
-      <th>Username</th>
-      <th>Quiz ID</th>
       <th>Room ID</th>
       <th>Status</th>
-      <th>Amount of Online/Offline Time</th>
+      <th style="width:auto">Time to consider for calculations</th>
+      <th style="width:auto">Total live-time</th>
+      <th style="width:auto">Total dead-time</th>
     </tr>
 
-  </table>
+  </table><center>
 </html>
 
 <script>
@@ -44,40 +44,27 @@ td,th {
      setInterval(function() {
      $.get("/livestatus", function(livestatusinfo) {
        for(i in livestatusinfo){
-         var username=livestatusinfo[i].username;
-         var quizid=livestatusinfo[i].quizid;
          var roomid=livestatusinfo[i].roomid;
-         var countConnSockID=livestatusinfo[i].count_connected_socketid;
-         var countDisconnSockID=livestatusinfo[i].count_disconnected_socketid;
-         var maxConnTimestamp=livestatusinfo[i].max_connected_timestamp;
-         var maxDisconnTimestamp=livestatusinfo[i].max_disconnected_timestamp;
+         var status=livestatusinfo[i].status;
+         var timetoconsider=livestatusinfo[i].timetoconsider;
+         var livetime=livestatusinfo[i].livetime;
+         var deadtime=livestatusinfo[i].deadtime;
 
-         if(countConnSockID == countDisconnSockID)
-          {
-           var socketstatus="Disconnected";
-           var timestampToConsider=maxDisconnTimestamp;
-          }
-         else
-          {
-            if(countConnSockID > countDisconnSockID)
-               {
-                 var socketstatus="Connected";
-                 var timestampToConsider=maxConnTimestamp;
-               }
-          }
-
-         var currentTimestamp=new Date().getTime();
-         var diff = currentTimestamp - timestampToConsider;
-         var onlineTime = humanise(diff);
+         var humanisedlivetime = humanise(livetime);
+         var humaniseddeadtime = humanise(deadtime);
 
          if($('#'+roomid).length > 0)
          {
-            $('#'+roomid).find('td:eq(3)').html(socketstatus);
-            $('#'+roomid).find('td:eq(4)').html(onlineTime);
-           //then update that row-> delete previous one or try to update it
+              //remove prev. row and add updted row
+             $('#'+roomid).remove();
+             var  row='<tr id='+roomid+'><td>'+roomid+'</td><td>'+status+'</td><td>'+timetoconsider+'</td>'+
+                      '<td>'+humanisedlivetime+'</td><td>'+humaniseddeadtime+'</td></tr>';
+               $("#livestatus").append(row);
+
          }else{
-           // new row addition
-           var  row='<tr id='+roomid+'><td>'+username+'</td><td>'+quizid+'</td><td>'+roomid+'</td><td>'+socketstatus+'</td><td>'+onlineTime+'</td></tr>';
+           //new row addition
+           var  row='<tr id='+roomid+'><td>'+roomid+'</td><td>'+status+'</td><td>'+timetoconsider+'</td>'+
+                    '<td>'+humanisedlivetime+'</td><td>'+humaniseddeadtime+'</td></tr>';
              $("#livestatus").append(row);
          }
        }

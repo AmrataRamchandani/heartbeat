@@ -192,16 +192,9 @@ io.on('connection', function(socket) {
 });
 
 app.get('/livestatus', function(req, res) {
-    var sql = "select username,quizid,roomid, " +
-        "count(case when socketstatus = 'Connected' then socketid end) as count_connected_socketid, " +
-        "count(case when socketstatus = 'Disconnected' then socketid end) as count_disconnected_socketid, " +
-        "max(case when socketstatus = 'Connected' then timestamp end) as max_connected_timestamp, " +
-        "max(case when socketstatus = 'Disconnected' then timestamp end) as max_disconnected_timestamp " +
-        "from socketinfo " +
-        "group by username,quizid,roomid";
+    var sql = "select * from livetable1 ";
     con.query(sql, function(err, result, fields) {
         if (err) throw err;
-
         res.send(result);
     });
 });
